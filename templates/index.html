@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Print Service</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        .container h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            animation: slideIn 1s ease-out;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: border 0.3s;
+            margin-top: 10px;
+        }
+
+        input[type="file"] {
+            border: none;
+            background-color: #f9f9f9;
+            font-size: 1.1rem;
+        }
+
+        input[type="file"]:hover {
+            cursor: pointer;
+            background-color: #e6e6e6;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .footer {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 30px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload and Print PDF</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="file" required>
+            </div>
+
+            <div class="form-group">
+                <input type="text" name="selected_pages" placeholder="Pages to print (e.g., 1, 2-4)">
+            </div>
+
+            <div class="form-group">
+                <input type="number" name="num_copies" value="1" min="1" placeholder="Number of Copies">
+            </div>
+
+            <div class="form-group">
+                <select name="layout">
+                    <option value="portrait">Portrait Layout</option>
+                    <option value="landscape">Landscape Layout</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="number" name="pages_per_sheet" value="1" min="1" placeholder="Pages per Sheet">
+            </div>
+
+            <button type="submit">Upload and Print</button>
+        </form>
+
+        <div class="footer">
+            <p>&copy; 2025 PDF Print Service | All Rights Reserved</p>
+        </div>
+    </div>
+</body>
+</html>
