@@ -258,6 +258,29 @@
             border-color: var(--primary-color);
             background-color: rgba(74, 105, 189, 0.1);
         }
+
+        .device-status {
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: 20px;
+            color: #7f8c8d;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-dot.online {
+            background-color: var(--success-color);
+        }
+
+        .status-dot.offline {
+            background-color: var(--error-color);
+        }
     </style>
 </head>
 
@@ -306,6 +329,11 @@
                 Preview & Proceed to Payment
             </button>
         </form>
+
+        <div id="device-status" class="device-status">
+            <span id="status-indicator" class="status-dot offline"></span>
+            <span id="status-text">Checking printer status...</span>
+        </div>
     </div>
 
     <!-- Payment Dialog -->
@@ -337,7 +365,39 @@
             const upiCards = document.querySelectorAll('.upi-card');
             const payBtn = document.getElementById('pay-btn');
             const paymentStatus = document.getElementById('payment-status');
+            const statusIndicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
             let selectedUPI = null;
+
+            // Check device status every 10 seconds
+            function checkDeviceStatus() {
+                fetch('/api/devices')
+                    .then(response => response.json())
+                    .then(data => {
+                        const devices = data.devices;
+                        const activeDevices = Object.values(devices).filter(device => device.active);
+
+                        if (activeDevices.length > 0) {
+                            statusIndicator.classList.remove('offline');
+                            statusIndicator.classList.add('online');
+                            statusText.textContent = `${activeDevices.length} printer${activeDevices.length > 1 ? 's' : ''} online`;
+                        } else {
+                            statusIndicator.classList.remove('online');
+                            statusIndicator.classList.add('offline');
+                            statusText.textContent = 'No printers online';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking device status:', error);
+                        statusIndicator.classList.remove('online');
+                        statusIndicator.classList.add('offline');
+                        statusText.textContent = 'Error checking printer status';
+                    });
+            }
+
+            // Check status immediately and then every 10 seconds
+            checkDeviceStatus();
+            setInterval(checkDeviceStatus, 10000);
 
             // File Upload Handling
             fileUpload.addEventListener('change', function (e) {
@@ -402,6 +462,11 @@
                 const formData = new FormData(form);
                 formData.append('upi_method', selectedUPI);
 
+                // Show loading
+                paymentStatus.textContent = 'Processing payment...';
+                paymentStatus.classList.add('status-success');
+                payBtn.disabled = true;
+
                 // Send to server
                 fetch('/upload', {
                     method: 'POST',
@@ -412,16 +477,35 @@
                         if (data.status === 'success') {
                             paymentStatus.textContent = 'Payment Successful! Print job submitted.';
                             paymentStatus.classList.add('status-success');
+
+                            // Reset form after 3 seconds
+                            setTimeout(() => {
+                                paymentOverlay.style.display = 'none';
+                                form.reset();
+                                fileCustomText.textContent = 'Click or drag and drop your PDF here';
+                                uploadStatus.classList.remove('status-success', 'status-error');
+                                uploadStatus.textContent = '';
+                                payBtn.disabled = false;
+                            }, 3000);
                         } else {
                             paymentStatus.textContent = 'Payment Failed. Please try again.';
                             paymentStatus.classList.add('status-error');
+                            payBtn.disabled = false;
                         }
                     })
                     .catch(error => {
                         paymentStatus.textContent = 'An error occurred. Please try again.';
                         paymentStatus.classList.add('status-error');
                         console.error('Error:', error);
+                        payBtn.disabled = false;
                     });
+            });
+
+            // Close payment dialog when clicking outside
+            paymentOverlay.addEventListener('click', function (e) {
+                if (e.target === paymentOverlay) {
+                    paymentOverlay.style.display = 'none';
+                }
             });
         });
     </script>
