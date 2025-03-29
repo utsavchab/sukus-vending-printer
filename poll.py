@@ -22,7 +22,7 @@ logger = logging.getLogger("PrinterClient")
 
 # Configuration
 DEVICE_ID = "pi_printer_001"  # Unique ID for this Raspberry Pi
-SERVER_URL = "http://localhost:5000/api/check_commands"  # Replace with your server URL
+SERVER_URL = "https://sukus-vending-printer.onrender.com/api/check_commands"  # Replace with your server URL
 POLL_INTERVAL = 10  # Seconds between polls
 UPLOAD_FOLDER = './downloads'  # Folder to store downloaded PDFs
 RETRY_INTERVAL = 10  # Seconds to wait after a connection error
