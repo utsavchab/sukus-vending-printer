@@ -1,0 +1,4 @@
+2025-03-29 14:00:15,336 - PrinterClient - ERROR - Failed to connect to CUPS: failed to connect to server
+2025-03-29 14:00:38,724 - PrinterClient - INFO - Default printer: None
+2025-03-29 14:00:38,725 - PrinterClient - ERROR - No printers found
+2025-03-29 14:00:38,725 - PrinterClient - ERROR - Failed to connect to CUPS: No printers available

@@ -22,10 +22,10 @@ logger = logging.getLogger("PrinterClient")
 
 # Configuration
 DEVICE_ID = "pi_printer_001"  # Unique ID for this Raspberry Pi
-SERVER_URL = "http://your-app-server.com/api/check_commands"  # Replace with your server URL
-POLL_INTERVAL = 10  # Seconds between polls
+SERVER_URL = "http://localhost/api/check_commands"  # Replace with your server URL
+POLL_INTERVAL = 5  # Seconds between polls
 UPLOAD_FOLDER = './downloads'  # Folder to store downloaded PDFs
-RETRY_INTERVAL = 30  # Seconds to wait after a connection error
+RETRY_INTERVAL = 10  # Seconds to wait after a connection error
 
 # Ensure download directory exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
